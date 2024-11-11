@@ -1,87 +1,102 @@
 # Maharashtra Assembly Election Prediction
 
-This project uses historical election data and sentiment analysis to predict the outcomes of the Maharashtra state assembly elections. Leveraging data from 1962 to 2019 and web-scraped sentiment scores of each party, this model forecasts potential winning outcomes, indicating whether the assembly has a majority or if a coalition is likely required.
+This project predicts outcomes for the Maharashtra state assembly elections using historical election data (1962–2019) and sentiment analysis of public opinion as captured from recent web news articles. The model forecasts potential winning outcomes, indicating whether the assembly has a majority or requires a coalition, and provides insights on seat distribution among political parties.
 
 ## Table of Contents
 1. [Project Overview](#project-overview)
 2. [Data Collection and Preprocessing](#data-collection-and-preprocessing)
 3. [Exploratory Data Analysis (EDA)](#exploratory-data-analysis-eda)
-4. [Feature Engineering](#feature-engineering)
-5. [Model Training and Prediction](#model-training-and-prediction)
-6. [Post-Processing: Sentiment Analysis](#post-processing-sentiment-analysis)
-7. [Final Results](#final-results)
-8. [Getting Started](#getting-started)
-9. [Project Structure](#project-structure)
-10. [Acknowledgments](#acknowledgments)
+4. [Sentiment Analysis](#sentiment-analysis)
+5. [Feature Engineering](#feature-engineering)
+6. [Model Training and Prediction](#model-training-and-prediction)
+7. [Post-Processing and Sentiment Adjustment](#post-processing-and-sentiment-adjustment)
+8. [Final Results](#final-results)
+9. [Getting Started](#getting-started)
+10. [Project Structure](#project-structure)
+11. [Acknowledgments](#acknowledgments)
 
 ## Project Overview
-The objective of this project is to develop a predictive model for the Maharashtra state assembly elections. By examining historical voting data and current public opinion, this model provides an analysis of seat distribution among political parties, as well as an indication of which parties may form a coalition if a majority is not reached.
+The objective is to create a predictive model for Maharashtra's elections. Using historical data trends and current public sentiment, this model analyzes party-wise seat distribution, highlights winning parties, and assesses coalition needs in the event of a hung assembly.
 
 ## Data Collection and Preprocessing
 ### Historical Data
-Historical election data was collected, covering Maharashtra assembly elections from 1962 to 2019. The data includes:
+Historical data from Maharashtra assembly elections (1962-2019) includes:
 - Constituency names
-- Year and election results
-- Party names and candidates' positions
-- Votes received
+- Election year and results
+- Party affiliations, candidates’ positions
+- Vote counts
 
 ### Sentiment Data
-To capture current opinions, news articles were scraped, and sentiment scores were generated for each major party using sentiment analysis tools. Each party received an average sentiment score based on recent public and media sentiments nearing the election.
+To gauge current public opinion, we scraped recent news articles and applied sentiment analysis to assess the perception of major political parties. Each party received an average sentiment score based on recent news and media sentiment, reflecting the public’s mood nearing the elections.
 
 ### Preprocessing Steps
-1. **Data Wrangling**: Removing inconsistencies and standardizing column names.
-2. **Data Cleaning**: Handling missing values, correcting data types, and filtering out erroneous records.
-3. **Encoding**: Label encoding was used for categorical features like party names and constituencies.
-4. **Feature Scaling**: Numeric features were standardized to ensure even scaling across the model.
+1. **Data Cleaning**: Handled missing values, corrected data types, and filtered out erroneous records.
+2. **Data Wrangling**: Standardized formats, organized columns, and consolidated similar party names.
+3. **Encoding**: Applied label encoding to categorical features like party names and constituencies.
+4. **Feature Scaling**: Used standardization to normalize numerical features.
 
 ## Exploratory Data Analysis (EDA)
-EDA was performed to:
-- Analyze vote distribution across parties.
-- Examine trends in constituency outcomes over time.
-- Visualize data correlations and feature relevance for model inputs.
+EDA focused on:
+- Understanding vote distributions across parties.
+- Identifying voting trends and constituency outcomes.
+- Visualizing correlations between features to inform model input selections.
+
+### Visualizations
+- **Bar Plot of Sentiment Scores**: Displayed average sentiment scores per party, providing an initial view of public opinion.
+- **Heatmap**: Illustrated sentiment polarity across parties, highlighting positive to negative perceptions.
+
+## Sentiment Analysis
+Sentiment analysis on scraped news articles used **TextBlob** to calculate sentiment polarity, allowing us to:
+1. **Extract Sentiment**: Each article’s sentiment score was calculated, indicating positive or negative bias toward parties.
+2. **Average Sentiment per Party**: Grouped articles by party mentions and computed average sentiment scores.
+   
+   These sentiment scores later adjusted the model’s predictions, offering a nuanced forecast that incorporates recent public opinion.
 
 ## Feature Engineering
-Key features were created to enhance the model’s predictive power:
-- **Const_Victory_Rate**: Historical win rate for each party by constituency.
-- **Recent_Victory_Rate**: Recent win rate over the last two elections for each party.
-- **Type_Victory_Rate**: Win rate by constituency type (e.g., urban vs. rural).
-- **Incumbent_Success**: Advantage metric for parties with incumbents.
+Key features were created to enhance the predictive model:
+- **Const_Victory_Rate**: Historical win rate of each party in a given constituency.
+- **Recent_Victory_Rate**: Win rate over the last two elections to capture recent trends.
+- **Type_Victory_Rate**: Constituency-type-based win rate (e.g., urban or rural).
+- **Incumbent_Success**: Represents advantage if a party holds the constituency.
 
-These engineered features capture trends that significantly impact election outcomes, improving model performance.
+These engineered features add depth, capturing important political patterns over time to boost model accuracy.
 
 ## Model Training and Prediction
-An ensemble model was trained using:
-- **XGBoost**: A boosting algorithm that excels in handling tabular data with non-linear patterns.
-- **RandomForest**: An ensemble of decision trees that reduces overfitting and handles diverse feature interactions.
+An ensemble model was trained, leveraging:
+- **XGBoost**: Effective for handling complex relationships in tabular data.
+- **RandomForest**: Ensemble decision trees to generalize well across constituencies.
 
-The ensemble model, using a soft voting strategy, assigns probabilities to each party winning a constituency. **GridSearchCV** was used to tune hyperparameters, ensuring optimal performance.
+The ensemble model uses a **soft voting** method, aggregating probabilities from both algorithms to decide constituency winners.
 
-### Evaluation Metrics
-- **Accuracy**: Proportion of correctly predicted winners.
-- **Precision, Recall, F1-Score**: Detailed metrics for each party to assess prediction reliability and minimize misclassification.
+### Model Evaluation
+- **Accuracy**: Measures the overall rate of correct predictions.
+- **Precision, Recall, F1-Score**: Evaluates each party’s performance, offering insights into prediction reliability and misclassification patterns.
 
-## Post-Processing: Sentiment Analysis
-After initial predictions, sentiment scores for each party were applied to adjust win probabilities:
-- The model output was weighted by each party’s average sentiment score.
-- This adjustment reflects recent public sentiment trends, enhancing the relevance of predictions.
+## Post-Processing and Sentiment Adjustment
+After the initial predictions, sentiment scores were applied to adjust winning probabilities:
+- Sentiment scores for each party influenced the likelihood of constituency wins.
+- This adjustment incorporates public sentiment into the model’s output, reflecting the recent mood toward each party.
 
 ## Final Results
-The final results provide:
-- **Predicted Seats per Party**: The likely seat count for each party.
-- **Majority Status**: Indicates if any party has achieved a majority (145 seats) or if a coalition is needed.
-- **Coalition Scenarios**: In the event of a hung assembly, suggested coalitions based on seat counts to meet majority requirements.
+The final predictions include:
+- **Seat Prediction per Party**: Likely seat distribution among parties.
+- **Assembly Majority Status**: Indicates if any party has a majority (145 seats) or if a coalition is required.
+- **Coalition Scenarios**: Suggested alliances if no single party achieves a majority.
 
-Sample Output:
-- Party-wise seat distribution.
-- Status of the assembly (majority or hung).
-- Potential coalition configurations, e.g., Party A + Party B with combined seats.
+### Sample Output:
+- **Predicted Seat Distribution**: Party-wise seat counts.
+- **Assembly Status**: Majority or hung status.
+- **Coalition Possibilities**: Potential combinations for forming a majority, based on seat counts.
 
+3. **Running the Project**:
+   - Place the election data and sentiment data in the appropriate directories.
+   - Run the model script to generate predictions and view results.
 
 ## Project Structure
-- `data/`: Directory for storing raw and processed datasets.
-- `notebooks/`: Google Colab notebooks for EDA and model development.
-- `scripts/`: Scripts for data preprocessing, feature engineering, and model evaluation.
-- `results/`: Directory where prediction results are saved.
+- `data/`: Raw and processed datasets.
+- `notebooks/`: EDA, sentiment analysis, and model development notebooks.
+- `scripts/`: Data preprocessing, feature engineering, and model evaluation scripts.
+- `results/`: Directory where prediction outputs are saved.
 
 ## Acknowledgments
-Thanks to the Maharashtra Election Commission for providing historical data and various online sources for recent news articles used for sentiment analysis. 
+Thanks to the Maharashtra Election Commission for historical election data and various online sources for recent news articles used in sentiment analysis.
