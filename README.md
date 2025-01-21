@@ -18,6 +18,10 @@ This project predicts outcomes for the Maharashtra state assembly elections usin
 ## Project Overview
 The objective is to create a predictive model for Maharashtra's elections. Using historical data trends and current public sentiment, this model analyzes party-wise seat distribution, highlights winning parties, and assesses coalition needs in the event of a hung assembly.
 
+## Pipeline Flow
+<img width="283" alt="Screenshot 2025-01-21 at 12 08 03 PM" src="https://github.com/user-attachments/assets/60b87e19-fae7-4c59-9097-200278514f80" />
+
+
 ## Data Collection and Preprocessing
 ### Historical Data
 Historical data from Maharashtra assembly elections (1962-2019) includes:
